@@ -1,5 +1,7 @@
 import 'package:chat_flutter/models/usuario.dart';
+import 'package:chat_flutter/services/auth_service.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 
@@ -14,22 +16,30 @@ class _UsuariosPageState extends State<UsuariosPage> {
   RefreshController _refreshController = RefreshController(initialRefresh: false);
 
   final usuarios = [
-    Usuario(uuid: "1", nombre: "Pedro", email: "test1@test.com", online: true),
-    Usuario(uuid: "2", nombre: "Sandra", email: "test2@test.com", online: false),
-    Usuario(uuid: "3", nombre: "Kora", email: "test3@test.com", online: true),
+    
   ];
 
 
   @override
   Widget build(BuildContext context) {
+
+    final authService = Provider.of<AuthService>(context);
+
+    final usuario = authService.usuario;
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('Mi Nombre', style: TextStyle(color: Colors.black87)),
+        title: Text(usuario.nombre, style: TextStyle(color: Colors.black87)),
         elevation: 1,
         backgroundColor: Colors.white,
         leading: IconButton(
           icon: Icon (Icons.exit_to_app, color: Colors.black87),
-          onPressed: (){},
+          onPressed: (){
+            // TODO: Desconectarnos del socket server
+             Navigator.pushReplacementNamed(context, 'login');
+            AuthService.deleteToken();
+           
+          },
         ),
         actions: <Widget> [
             Container(
